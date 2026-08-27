@@ -27,15 +27,13 @@ if modo_tema == "🌙 Modo Oscuro":
     bg_app = "#1E1E1E"          
     bg_input = "#2D2D2D"        
     text_color = "#FFFFFF"      
-    text_input = "#FFFFFF"
     text_pestanas = "#0099DA"   
     text_autor = "#FFFFFF"      
     border_color = "#555555"
 else:
     bg_app = "#FFFFFF"          
-    bg_input = "#F0F2F6"        
+    bg_input = "#333333"  # Fondo oscuro elegante para resaltar el texto blanco      
     text_color = "#111111"      
-    text_input = "#000000"
     text_pestanas = "#009A44"   
     text_autor = "#000000"      
     border_color = "#CCCCCC"
@@ -70,18 +68,19 @@ st.markdown(f"""
         font-size: 1.1rem !important;
     }}
     
-    /* Cajas de entrada de texto fijas y legibles */
+    /* Cajas de entrada de texto */
     div[data-baseweb="input"] {{
         background-color: {bg_input} !important;
         border: 2px solid {border_color} !important;
         border-radius: 8px !important;
     }}
     
+    /* TEXTO SIEMPRE BLANCO EN LAS CAJAS DE ENTRADA */
     input {{
-        color: {text_input} !important;
-        -webkit-text-fill-color: {text_input} !important;
+        color: #FFFFFF !important;
+        -webkit-text-fill-color: #FFFFFF !important;
         background-color: transparent !important;
-        font-weight: 500 !important;
+        font-weight: bold !important;
     }}
     
     /* Sidebar */
@@ -421,7 +420,7 @@ if nivel_actual > 30:
     st.stop()
 
 # ---------------------------------------------------------
-# RESTRICCIÓN DIARIA REACTIVADA (1 NIVEL POR DÍA)
+# RESTRICCIÓN DIARIA (1 NIVEL POR DÍA)
 # ---------------------------------------------------------
 hoy = str(date.today())
 if u['ultimo_dia'] == hoy:
