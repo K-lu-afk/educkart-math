@@ -4,7 +4,74 @@ import pandas as pd
 from datetime import date
 
 # ---------------------------------------------------------
-# 1. BASE DE DATOS SQLITE
+# 1. CONFIGURACIÓN Y ESTILOS CSS PERSONALIZADOS (EDUCK ART)
+# ---------------------------------------------------------
+st.set_page_config(
+    page_title="Plataforma de Acertijos - Colegio Educk Art",
+    page_icon="📐",
+    layout="centered"
+)
+
+# Estilos visuales: Verde (#009A44), Azul (#0099DA), Rosa (#E6007E), Blanco (#FFFFFF)
+st.markdown("""
+    <style>
+    /* Fondo principal blanco y tipografía */
+    .stApp {
+        background-color: #FFFFFF;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    /* Encabezado principal con acento en Rosa Educk Art */
+    h1 {
+        color: #E6007E !important;
+        text-align: center;
+        font-weight: 700;
+    }
+    
+    /* Subtítulos en Azul */
+    h2, h3, .stSubheader {
+        color: #0099DA !important;
+    }
+    
+    /* Barra lateral en Verde Educk Art */
+    [data-testid="stSidebar"] {
+        background-color: #009A44 !important;
+    }
+    
+    /* Texto en la barra lateral en blanco para contraste */
+    [data-testid="stSidebar"] * {
+        color: #FFFFFF !important;
+    }
+    
+    /* Botones con estilo Rosa y bordes redondeados */
+    .stButton>button {
+        background-color: #E6007E !important;
+        color: white !important;
+        border-radius: 12px !important;
+        border: none !important;
+        font-weight: bold !important;
+        padding: 0.5rem 1rem !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .stButton>button:hover {
+        background-color: #0099DA !important;
+        transform: scale(1.02);
+    }
+    
+    /* Cajas de alerta e información */
+    .stAlert {
+        border-radius: 10px !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# Logo en la parte superior e incrustado en el menú lateral
+LOGO_URL = "https://lookaside.fbsbx.com/lookaside/crawler/media/?media_id=100064108599133"
+st.sidebar.image(LOGO_URL, use_container_width=True)
+
+# ---------------------------------------------------------
+# 2. BASE DE DATOS SQLITE
 # ---------------------------------------------------------
 def conectar_db():
     conn = sqlite3.connect("colegio_math.db")
@@ -27,7 +94,7 @@ def conectar_db():
 conn = conectar_db()
 
 # ---------------------------------------------------------
-# 2. BANCO DE ACERTIJOS
+# 3. BANCO DE ACERTIJOS
 # ---------------------------------------------------------
 banco_por_grado = {
     "1º": {
@@ -67,21 +134,32 @@ banco_por_grado = {
     }
 }
 
-# Configuración de la página
-st.set_page_config(page_title="Plataforma de Acertijos - Educk Art", page_icon="📐", layout="centered")
+# Reproductor de música en barra lateral
+st.sidebar.markdown("🎵 **Música Ambient:**")
+opcion_musica = st.sidebar.radio(
+    "Pista:",
+    ["Zelda - Ocarina of Time Ambient", "Resident Evil - Save Room Lofi"],
+    label_visibility="collapsed"
+)
 
-# Música de fondo de videojuego en la barra lateral
-st.sidebar.markdown("🎵 **Música de fondo:**")
-st.sidebar.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", loop=True)
+audio_url = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" if opcion_musica == "Zelda - Ocarina of Time Ambient" else "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+st.sidebar.audio(audio_url, loop=True)
+st.sidebar.write("---")
+st.sidebar.caption("⚡ *Hecho por Ilich Bauman Guerrero*")
 
 if "usuario" not in st.session_state:
     st.session_state.usuario = None
 
 # ---------------------------------------------------------
-# 3. INICIO DE SESIÓN Y REGISTRO
+# 4. INICIO DE SESIÓN Y REGISTRO DE ALUMNOS
 # ---------------------------------------------------------
 if st.session_state.usuario is None:
-    st.title("📐 Colegio Educk Art - Secundaria")
+    # Encabezado con imagen centrada
+    col_img1, col_img2, col_img3 = st.columns([1, 2, 1])
+    with col_img2:
+        st.image(LOGO_URL, use_container_width=True)
+        
+    st.title("Colegio Educk Art")
     st.subheader("Plataforma de Desafíos Matemáticos")
     
     tab1, tab2, tab3 = st.tabs(["Ingresar Alumno", "Registrarse", "Panel Maestros"])
@@ -127,17 +205,76 @@ if st.session_state.usuario is None:
                 st.warning("Llena todos los campos.")
 
     with tab3:
-        st.write("### Reporte para Calificaciones")
+        st.write("### 📊 Panel de Control Académico para Maestros")
         clave_maestro = st.text_input("Contraseña de Maestro:", type="password")
+        
         if clave_maestro == "admin123":
-            df = pd.read_sql_query("SELECT matricula AS Matrícula, nombre AS Nombre, grupo AS Grupo, trimestre1_nivel-1 AS 'T1 (Niveles)', trimestre2_nivel-1 AS 'T2 (Niveles)', trimestre3_nivel-1 AS 'T3 (Niveles)' FROM alumnos", conn)
-            st.write("**Registro de avance por alumno:**")
-            st.dataframe(df)
+            df = pd.read_sql_query("SELECT matricula AS Matrícula, nombre AS Nombre, grupo AS Grupo, trimestre1_nivel-1 AS T1_Niveles, trimestre2_nivel-1 AS T2_Niveles, trimestre3_nivel-1 AS T3_Niveles, intentos_fallidos AS Intentos_Hoy FROM alumnos", conn)
             
+            if df.empty:
+                st.info("Aún no hay alumnos registrados en la base de datos.")
+            else:
+                df['Niveles_Totales'] = df['T1_Niveles'] + df['T2_Niveles'] + df['T3_Niveles']
+                df['Calificación_Sugerida'] = (5.0 + (df['Niveles_Totales'] / 90.0) * 5.0).round(1)
+
+                st.write("---")
+                col1, col2, col3 = st.columns(3)
+                col1.metric("Total Alumnos", len(df))
+                col2.metric("Promedio General", f"{df['Calificación_Sugerida'].mean():.1f}")
+                col3.metric("Niveles Completados", int(df['Niveles_Totales'].sum()))
+                
+                st.write("---")
+                st.write("#### 🔎 Filtros de Búsqueda")
+                
+                col_f1, col_f2 = st.columns(2)
+                with col_f1:
+                    filtro_grado = st.selectbox("Filtrar por Grado:", ["Todos", "1º", "2º", "3º"])
+                with col_f2:
+                    filtro_grupo = st.selectbox("Filtrar por Grupo Específico:", ["Todos", "1º A", "1º B", "2º A", "2º B", "3º A", "3º B"])
+                
+                busqueda = st.text_input("🔍 Buscar por Nombre o Matrícula:")
+
+                df_filtrado = df.copy()
+                if filtro_grado != "Todos":
+                    df_filtrado = df_filtrado[df_filtrado['Grupo'].str.startswith(filtro_grado)]
+                if filtro_grupo != "Todos":
+                    df_filtrado = df_filtrado[df_filtrado['Grupo'] == filtro_grupo]
+                if busqueda:
+                    df_filtrado = df_filtrado[
+                        df_filtrado['Nombre'].str.contains(busqueda, case=False) | 
+                        df_filtrado['Matrícula'].str.contains(busqueda, case=False)
+                    ]
+
+                st.write(f"**Resultados ({len(df_filtrado)} alumnos):**")
+                st.dataframe(df_filtrado, use_container_width=True)
+
+                csv = df_filtrado.to_csv(index=False).encode('utf-8')
+                st.download_button(
+                    label="📥 Descargar Reporte en Excel (CSV)",
+                    data=csv,
+                    file_name="reporte_calificaciones_educkart.csv",
+                    mime="text/csv"
+                )
+
+                st.write("---")
+                st.write("#### 🛠️ Desbloquear Intentos de Alumno")
+                mat_desbloquear = st.selectbox("Seleccionar Alumno bloqueado:", df[df['Intentos_Hoy'] >= 3]['Matrícula'].tolist() if len(df[df['Intentos_Hoy'] >= 3]) > 0 else ["Ningún alumno bloqueado hoy"])
+                if st.button("Reiniciar Intentos") and mat_desbloquear != "Ningún alumno bloqueado hoy":
+                    c = conn.cursor()
+                    c.execute("UPDATE alumnos SET intentos_fallidos = 0 WHERE matricula = ?", (mat_desbloquear,))
+                    conn.commit()
+                    st.success(f"Intentos reiniciados con éxito para la matrícula {mat_desbloquear}.")
+                    st.rerun()
+
+        elif clave_maestro != "":
+            st.error("Contraseña incorrecta.")
+            
+    st.write("---")
+    st.caption("✨ *Hecho por Ilich Bauman Guerrero*")
     st.stop()
 
 # ---------------------------------------------------------
-# 4. PLATAFORMA DE JUEGO
+# 5. PLATAFORMA DE JUEGO (ALUMNO LOGUEADO)
 # ---------------------------------------------------------
 u = st.session_state.usuario
 grado_alumno = u['grupo'][:2]
@@ -188,7 +325,7 @@ if u['intentos'] >= 3:
     st.stop()
 
 # ---------------------------------------------------------
-# 5. EVALUACIÓN Y AVISO DE CUADERNO
+# 6. EVALUACIÓN Y AVISO DE CUADERNO
 # ---------------------------------------------------------
 st.subheader(f"🟢 {grado_alumno} Secundaria | {trimestre_sel} | Nivel {nivel_actual} de 30")
 
@@ -243,3 +380,6 @@ with st.form(key=f"form_abierto_{trimestre_sel}_{nivel_actual}"):
 
 if st.checkbox("💡 Ver Pista"):
     st.info(datos_nivel["pista"])
+
+st.write("---")
+st.caption("✨ *Hecho por Ilich Bauman Guerrero*")
