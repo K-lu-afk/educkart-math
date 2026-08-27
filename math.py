@@ -22,57 +22,49 @@ modo_tema = st.sidebar.radio(
     label_visibility="collapsed"
 )
 
-# Configuración visual con la paleta de Educk Art
 if modo_tema == "🌙 Modo Oscuro":
-    bg_app = "#1A1A1A"          # Gris oscuro confortable
-    bg_input = "#2A2A2A"        # Fondo para cajas de texto
-    text_color = "#FFFFFF"      # Texto general en blanco
-    text_pestanas = "#0099DA"   # Pestañas en Azul Educk Art
-    text_autor = "#FFFFFF"      # Marca de agua en blanco
-    border_color = "#444444"
+    bg_app = "#1E1E1E"          
+    bg_input = "#2D2D2D"        
+    text_color = "#FFFFFF"      
+    text_pestanas = "#0099DA"   
+    text_autor = "#FFFFFF"      
+    border_color = "#555555"
 else:
-    bg_app = "#FFFFFF"          # Blanco
-    bg_input = "#F4F6F9"        # Gris claro
-    text_color = "#222222"      # Texto oscuro para lectura fácil
-    text_pestanas = "#009A44"   # Pestañas en Verde Educk Art
-    text_autor = "#000000"      # Marca de agua en negro
+    bg_app = "#FFFFFF"          
+    bg_input = "#F0F2F6"        
+    text_color = "#111111"      
+    text_pestanas = "#009A44"   
+    text_autor = "#000000"      
     border_color = "#CCCCCC"
 
-# Inyección de estilos CSS institucionales
 st.markdown(f"""
     <style>
-    /* Fondo e interfaz general */
     .stApp {{
         background-color: {bg_app} !important;
         color: {text_color} !important;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }}
     
-    /* Título principal: Rosa Educk Art */
-    h1 {{
+    h1, .stTitle {{
         color: #E6007E !important;
-        text-align: center;
-        font-weight: 700;
+        text-align: center !important;
+        font-weight: 700 !important;
     }}
     
-    /* Subtítulos: Azul Educk Art */
     h2, h3, .stSubheader {{
         color: #0099DA !important;
     }}
     
-    /* Textos generales y etiquetas */
     p, span, label, div {{
         color: {text_color} !important;
     }}
 
-    /* Pestañas de navegación superiores */
     button[data-baseweb="tab"] div p {{
         color: {text_pestanas} !important;
         font-weight: bold !important;
         font-size: 1.1rem !important;
     }}
     
-    /* Cajas de entrada de texto */
     div[data-baseweb="input"] {{
         background-color: {bg_input} !important;
         border: 2px solid {border_color} !important;
@@ -84,7 +76,6 @@ st.markdown(f"""
         background-color: transparent !important;
     }}
     
-    /* Barra lateral: Verde Educk Art */
     [data-testid="stSidebar"] {{
         background-color: #009A44 !important;
     }}
@@ -93,7 +84,6 @@ st.markdown(f"""
         color: #FFFFFF !important;
     }}
     
-    /* Botones: Rosa Educk Art con efecto interactivo a Azul */
     .stButton>button {{
         background-color: #E6007E !important;
         color: #FFFFFF !important;
@@ -109,7 +99,6 @@ st.markdown(f"""
         transform: scale(1.02);
     }}
     
-    /* Estilo exclusivo para la Marca de Agua */
     .marca-agua {{
         color: {text_autor} !important;
         text-align: center;
@@ -145,42 +134,48 @@ def conectar_db():
 conn = conectar_db()
 
 # ---------------------------------------------------------
-# 4. BANCO DE ACERTIJOS
+# 4. BANCO DE ACERTIJOS SEGÚN EL PROGRAMA SINTÉTICO NEM (FASE 6)
 # ---------------------------------------------------------
 banco_por_grado = {
     "1º": {
         "Trimestre 1": {
-            1: {"pregunta": "1º Sec: Resuelve la jerarquía de operaciones: 6 + 4 * (9 - 3) / 2", "correcta": "18", "pista": "Primero resuelve el paréntesis (9-3)=6, luego multiplica y divide."},
-            2: {"pregunta": "1º Sec: ¿Cuál es el Mínimo Común Múltiplo (MCM) de 8 y 12?", "correcta": "24", "pista": "Busca el menor número divisible entre 8 y 12."},
-            3: {"pregunta": "1º Sec: Calcula el área en cm² de un triángulo con base = 14 cm y altura = 6 cm.", "correcta": "42", "pista": "Fórmula: (Base * Altura) / 2."}
+            1: {"pregunta": "NEM (Extensión del significado de las operaciones): Resuelve (-8) + (-5)", "correcta": "-13", "pista": "Al sumar dos números negativos, se suman sus valores absolutos y el resultado es negativo."},
+            2: {"pregunta": "NEM (Jerarquía de operaciones): Resuelve 15 + 3 * (8 - 2) / 2", "correcta": "24", "pista": "Resuelve primero el paréntesis (8-2)=6, luego multiplica, divide y al final suma."},
+            3: {"pregunta": "NEM (MCM y MCD): Calcula el Mínimo Común Múltiplo (MCM) de 6 y 9.", "correcta": "18", "pista": "Encuentra el número más pequeño que sea múltiplo común de 6 y 9."}
         },
         "Trimestre 2": {
-            1: {"pregunta": "1º Sec: Resuelve la ecuación: 3x + 5 = 20. ¿Cuánto vale x?", "correcta": "5", "pista": "Resta 5 a 20 y luego divide entre 3."}
+            1: {"pregunta": "NEM (Ecuaciones lineales): Resuelve para x: 2x + 7 = 19", "correcta": "6", "pista": "Resta 7 a 19 (12) y divide entre 2."},
+            2: {"pregunta": "NEM (Representación de números rel.): Convierte la fracción 3/4 a número decimal.", "correcta": "0.75", "pista": "Divide el numerador (3) entre el denominador (4)."}
         },
         "Trimestre 3": {
-            1: {"pregunta": "1º Sec: ¿Cuántos grados suman los ángulos internos de cualquier triángulo?", "correcta": "180", "pista": "Es una regla fundamental de la geometría."}
+            1: {"pregunta": "NEM (Rectas y ángulos): ¿Cuál es el suplemento de un ángulo de 110º?", "correcta": "70", "pista": "Los ángulos suplementarios suman 180º."},
+            2: {"pregunta": "NEM (Perímetro y área): Calcula el área de un triángulo con base = 12 cm y altura = 5 cm.", "correcta": "30", "pista": "Fórmula: (Base * Altura) / 2."}
         }
     },
     "2º": {
         "Trimestre 1": {
-            1: {"pregunta": "2º Sec: Si x⁴ * x³ = xⁿ, ¿cuál es el valor del exponente n?", "correcta": "7", "pista": "En la multiplicación de misma base, los exponentes se suman."}
+            1: {"pregunta": "NEM (Leyes de los exponentes): Simplifica x⁵ * x⁴. ¿Cuál es el valor del exponente final?", "correcta": "9", "pista": "En la multiplicación de potencias de la misma base, los exponentes se suman."},
+            2: {"pregunta": "NEM (Notación científica): Escribe 4.5 * 10³ en forma decimal estándar.", "correcta": "4500", "pista": "Mueve el punto decimal 3 lugares a la derecha."}
         },
         "Trimestre 2": {
-            1: {"pregunta": "2º Sec: Un triángulo rectángulo tiene catetos a = 6 y b = 8. ¿Cuánto mide la hipotenusa c?", "correcta": "10", "pista": "Aplica Pitágoras: c² = 6² + 8² = 36 + 64 = 100."}
+            1: {"pregunta": "NEM (Sistemas de ecuaciones 2x2): Si x + y = 10 y x - y = 4, ¿cuál es el valor de x?", "correcta": "7", "pista": "Suma ambas ecuaciones: 2x = 14, despeja x."},
+            2: {"pregunta": "NEM (Teorema de Pitágoras): En un triángulo rectángulo con catetos a = 9 y b = 12, calcula la hipotenusa c.", "correcta": "15", "pista": "c² = 9² + 12² = 81 + 144 = 225. Sacale raíz a 225."}
         },
         "Trimestre 3": {
-            1: {"pregunta": "2º Sec: Calcula el área de un cuadrado cuyo lado mide 12 cm.", "correcta": "144", "pista": "Lado por lado (12 * 12)."}
+            1: {"pregunta": "NEM (Relaciones inversas): Si 4 trabajadores tardan 6 horas en pintar una barda, ¿cuántas horas tardarán 8 trabajadores?", "correcta": "3", "pista": "A mayor cantidad de trabajadores, menor tiempo (proporcionalidad inversa)."}
         }
     },
     "3º": {
         "Trimestre 1": {
-            1: {"pregunta": "3º Sec: En la ecuación x² - 25 = 0, ¿cuál es el valor de la raíz positiva de x?", "correcta": "5", "pista": "Despeja x² = 25 y saca la raíz cuadrada."}
+            1: {"pregunta": "NEM (Ecuaciones cuadráticas): Resuelve x² - 49 = 0. Escribe la raíz positiva.", "correcta": "7", "pista": "Despeja x² = 49 y obtén la raíz cuadrada."},
+            2: {"pregunta": "NEM (Ecuaciones de segundo grado): Resuelve x² - 7x + 10 = 0. ¿Cuál es la raíz mayor?", "correcta": "5", "pista": "Busca dos números que multiplicados den 10 y sumados den 7 (2 y 5)."}
         },
         "Trimestre 2": {
-            1: {"pregunta": "3º Sec: En un triángulo rectángulo con Cateto Opuesto = 4 e Hipotenusa = 5, calcula Sen(θ) en decimal.", "correcta": "0.8", "pista": "Seno = Opuesto / Hipotenusa = 4 / 5."}
+            1: {"pregunta": "NEM (Razones trigonométricas): En un triángulo rectángulo, si Cateto Opuesto = 3 e Hipotenusa = 5, calcula Sen(θ) en decimal.", "correcta": "0.6", "pista": "Seno = Opuesto / Hipotenusa (3 / 5)."},
+            2: {"pregunta": "NEM (Trigonometría): Si Tan(θ) = Cateto Opuesto / Cateto Adyacente, calcula Tan(θ) si CO = 8 y CA = 4.", "correcta": "2", "pista": "Divide 8 entre 4."}
         },
         "Trimestre 3": {
-            1: {"pregunta": "3º Sec: Resuelve x² - 9x + 20 = 0. ¿Cuál es la raíz mayor?", "correcta": "5", "pista": "Busca dos números que multiplicados den 20 y sumados den 9 (4 y 5)."}
+            1: {"pregunta": "NEM (Volumen de cuerpos geométricos): Calcula el volumen en cm³ de un cilindro con r = 2 cm, h = 5 cm y usando π = 3.14", "correcta": "62.8", "pista": "Fórmula: π * r² * h = 3.14 * (2²) * 5."}
         }
     }
 }
@@ -210,7 +205,7 @@ if "usuario" not in st.session_state:
 # ---------------------------------------------------------
 if st.session_state.usuario is None:
     st.title("Colegio Educk Art")
-    st.subheader("Plataforma de Desafíos Matemáticos")
+    st.subheader("Plataforma de Desafíos Matemáticos (NEM)")
     
     tab1, tab2, tab3 = st.tabs(["Ingresar Alumno", "Registrarse", "Panel Maestros"])
     
@@ -383,7 +378,7 @@ st.warning("📝 **¡Atención!** Saca tu cuaderno de matemáticas y realiza el 
 
 preguntas_grado = banco_por_grado.get(grado_alumno, {}).get(trimestre_sel, {})
 datos_nivel = preguntas_grado.get(nivel_actual, {
-    "pregunta": f"Escribe el resultado numérico exacto para el desafío de {grado_alumno} Secundaria del nivel {nivel_actual}.",
+    "pregunta": f"Escribe el resultado numérico exacto para el desafío NEM de {grado_alumno} Secundaria del nivel {nivel_actual}.",
     "correcta": "10",
     "pista": "Resuelve la operación en tu cuaderno paso a paso antes de escribir la respuesta."
 })
