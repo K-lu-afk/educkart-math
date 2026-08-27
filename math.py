@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import date
 
 # ---------------------------------------------------------
-# 1. CONFIGURACIÓN Y ESTILOS CSS PERSONALIZADOS (EDUCK ART)
+# 1. CONFIGURACIÓN INICIAL
 # ---------------------------------------------------------
 st.set_page_config(
     page_title="Plataforma de Acertijos - Colegio Educk Art",
@@ -12,67 +12,119 @@ st.set_page_config(
     layout="centered"
 )
 
-# Estilos visuales: Verde (#009A44), Azul (#0099DA), Rosa (#E6007E), Blanco (#FFFFFF)
-st.markdown("""
+# ---------------------------------------------------------
+# 2. SELECTOR DE MODO CLARO / OSCURO EN LA BARRA LATERAL
+# ---------------------------------------------------------
+st.sidebar.markdown("🎨 **Apariencia de la Página:**")
+modo_tema = st.sidebar.radio(
+    "Selecciona Tema:",
+    ["☀️ Modo Luz", "🌙 Modo Oscuro"],
+    label_visibility="collapsed"
+)
+
+# Definición de variables de color dinámicas según el tema
+if modo_tema == "🌙 Modo Oscuro":
+    bg_app = "#1E1E1E"          # Gris oscuro elegante para el fondo general
+    bg_input = "#2D2D2D"        # Gris medio para cajas de entrada
+    text_color = "#FFFFFF"      # Texto blanco general
+    text_pestanas = "#FFFFFF"   # Pestañas en blanco
+    text_autor = "#FFFFFF"      # Firma de Ilich en blanco
+    border_color = "#444444"
+else:
+    bg_app = "#FFFFFF"          # Blanco limpio
+    bg_input = "#F0F2F6"        # Gris muy claro para entradas
+    text_color = "#000000"      # Texto negro general
+    text_pestanas = "#009A44"   # Pestañas en Verde Educk Art
+    text_autor = "#000000"      # Firma de Ilich en negro
+    border_color = "#DDDDDD"
+
+# Inyección de estilos CSS según el modo seleccionado
+st.markdown(f"""
     <style>
-    /* Fondo principal blanco */
-    .stApp {
-        background-color: #FFFFFF;
+    /* Fondo principal app */
+    .stApp {{
+        background-color: {bg_app} !important;
+        color: {text_color} !important;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+    }}
     
-    /* Encabezados */
-    h1 {
+    /* Título principal en Rosa Educk Art */
+    h1 {{
         color: #E6007E !important;
         text-align: center;
         font-weight: 700;
-    }
+    }}
     
-    h2, h3, .stSubheader {
+    /* Subtítulos en Azul Educk Art */
+    h2, h3, .stSubheader {{
         color: #0099DA !important;
-    }
+    }}
     
-    /* Barra lateral */
-    [data-testid="stSidebar"] {
-        background-color: #009A44 !important;
-    }
+    /* Textos generales, etiquetas y marcas de agua */
+    p, span, label, div {{
+        color: {text_color} !important;
+    }}
+
+    /* Pestañas (Ingresar Alumno, Registrarse, Panel Maestros) */
+    button[data-baseweb="tab"] div p {{
+        color: {text_pestanas} !important;
+        font-weight: bold !important;
+        font-size: 1.05rem !important;
+    }}
     
-    [data-testid="stSidebar"] * {
-        color: #FFFFFF !important;
-    }
-    
-    /* Corrección de cajas de entrada (Forzar texto claro y visible) */
-    div[data-baseweb="input"] {
-        background-color: #F0F2F6 !important;
+    /* Cajas de texto de entrada */
+    div[data-baseweb="input"] {{
+        background-color: {bg_input} !important;
+        border: 1px solid {border_color} !important;
         border-radius: 8px !important;
-    }
-    input {
-        color: #000000 !important;
-    }
+    }}
     
-    /* Botones */
-    .stButton>button {
+    input {{
+        color: {text_color} !important;
+        background-color: transparent !important;
+    }}
+    
+    /* Barra lateral en Verde Educk Art constante */
+    [data-testid="stSidebar"] {{
+        background-color: #009A44 !important;
+    }}
+    
+    [data-testid="stSidebar"] * {{
+        color: #FFFFFF !important;
+    }}
+    
+    /* Botones de acción en Rosa con letras blancas */
+    .stButton>button {{
         background-color: #E6007E !important;
-        color: white !important;
+        color: #FFFFFF !important;
         border-radius: 12px !important;
         border: none !important;
         font-weight: bold !important;
         padding: 0.5rem 1rem !important;
         transition: all 0.3s ease !important;
-    }
+    }}
     
-    .stButton>button:hover {
+    .stButton>button:hover {{
         background-color: #0099DA !important;
         transform: scale(1.02);
-    }
+    }}
+    
+    /* Firma del Autor (Estilo personalizado) */
+    .firma-autor {{
+        color: {text_autor} !important;
+        text-align: center;
+        font-weight: bold;
+        font-size: 0.9rem;
+        margin-top: 15px;
+    }}
     </style>
 """, unsafe_allow_html=True)
 
-# Logo oficial (utilizando logo.png de tu repositorio o fallback)
+# Logo oficial
 LOGO_URL = "logo.png"
 
 # ---------------------------------------------------------
-# 2. BASE DE DATOS SQLITE
+# 3. BASE DE DATOS SQLITE
 # ---------------------------------------------------------
 def conectar_db():
     conn = sqlite3.connect("colegio_math.db")
@@ -95,7 +147,7 @@ def conectar_db():
 conn = conectar_db()
 
 # ---------------------------------------------------------
-# 3. BANCO DE ACERTIJOS
+# 4. BANCO DE ACERTIJOS
 # ---------------------------------------------------------
 banco_por_grado = {
     "1º": {
@@ -136,20 +188,17 @@ banco_por_grado = {
 }
 
 # ---------------------------------------------------------
-# MÚSICA DE YOUTUBE Y MARCA DE AGUA
+# MÚSICA DE YOUTUBE Y REPRODUCTOR
 # ---------------------------------------------------------
-st.sidebar.markdown("🎵 **Música de Fondo (YouTube):**")
+st.sidebar.write("---")
+st.sidebar.markdown("🎵 **Música Ambient (YouTube):**")
 opcion_musica = st.sidebar.radio(
     "Selecciona Pista:",
     ["Zelda - Ocarina of Time", "Resident Evil - Save Room Lofi"],
     label_visibility="collapsed"
 )
 
-# Enlaces exactos enviados
-if opcion_musica == "Zelda - Ocarina of Time":
-    url_yt = "https://youtu.be/gVJzgXehZW8"
-else:
-    url_yt = "https://youtu.be/S9cCNem6Tjk"
+url_yt = "https://youtu.be/gVJzgXehZW8" if opcion_musica == "Zelda - Ocarina of Time" else "https://youtu.be/S9cCNem6Tjk"
 
 st.sidebar.video(url_yt)
 st.sidebar.write("---")
@@ -159,7 +208,7 @@ if "usuario" not in st.session_state:
     st.session_state.usuario = None
 
 # ---------------------------------------------------------
-# 4. INICIO DE SESIÓN Y REGISTRO DE ALUMNOS
+# 5. INICIO DE SESIÓN Y REGISTRO DE ALUMNOS
 # ---------------------------------------------------------
 if st.session_state.usuario is None:
     st.title("Colegio Educk Art")
@@ -273,11 +322,11 @@ if st.session_state.usuario is None:
             st.error("Contraseña incorrecta.")
             
     st.write("---")
-    st.caption("✨ *Hecho por Ilich Bauman Guerrero*")
+    st.markdown('<p class="firma-autor">✨ Hecho por Ilich Bauman Guerrero</p>', unsafe_allow_html=True)
     st.stop()
 
 # ---------------------------------------------------------
-# 5. PLATAFORMA DE JUEGO (ALUMNO LOGUEADO)
+# 6. PLATAFORMA DE JUEGO (ALUMNO LOGUEADO)
 # ---------------------------------------------------------
 u = st.session_state.usuario
 grado_alumno = u['grupo'][:2]
@@ -328,7 +377,7 @@ if u['intentos'] >= 3:
     st.stop()
 
 # ---------------------------------------------------------
-# 6. EVALUACIÓN Y AVISO DE CUADERNO
+# 7. EVALUACIÓN Y AVISO DE CUADERNO
 # ---------------------------------------------------------
 st.subheader(f"🟢 {grado_alumno} Secundaria | {trimestre_sel} | Nivel {nivel_actual} de 30")
 
@@ -385,4 +434,4 @@ if st.checkbox("💡 Ver Pista"):
     st.info(datos_nivel["pista"])
 
 st.write("---")
-st.caption("✨ *Hecho por Ilich Bauman Guerrero*")
+st.markdown('<p class="firma-autor">✨ Hecho por Ilich Bauman Guerrero</p>', unsafe_allow_html=True)
