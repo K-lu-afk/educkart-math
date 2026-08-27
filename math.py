@@ -32,7 +32,7 @@ if modo_tema == "🌙 Modo Oscuro":
     border_color = "#555555"
 else:
     bg_app = "#FFFFFF"          
-    bg_input = "#333333"  # Fondo oscuro elegante para resaltar el texto blanco      
+    bg_input = "#222222"  # Caja de color negro/oscuro    
     text_color = "#111111"      
     text_pestanas = "#009A44"   
     text_autor = "#000000"      
@@ -68,15 +68,14 @@ st.markdown(f"""
         font-size: 1.1rem !important;
     }}
     
-    /* Cajas de entrada de texto */
-    div[data-baseweb="input"] {{
+    /* REGLA GENERAL: TODO TEXTO DENTRO DE UNA CAJA NEGRA/OSCURA ES BLANCO */
+    div[data-baseweb="input"], [data-baseweb="select"] > div {{
         background-color: {bg_input} !important;
         border: 2px solid {border_color} !important;
         border-radius: 8px !important;
     }}
     
-    /* TEXTO SIEMPRE BLANCO EN LAS CAJAS DE ENTRADA */
-    input {{
+    input, textarea, select, [data-baseweb="select"] * {{
         color: #FFFFFF !important;
         -webkit-text-fill-color: #FFFFFF !important;
         background-color: transparent !important;
