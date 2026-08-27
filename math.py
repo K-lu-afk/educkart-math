@@ -15,35 +15,42 @@ st.set_page_config(
 # Estilos visuales: Verde (#009A44), Azul (#0099DA), Rosa (#E6007E), Blanco (#FFFFFF)
 st.markdown("""
     <style>
-    /* Fondo principal blanco y tipografía */
+    /* Fondo principal blanco */
     .stApp {
         background-color: #FFFFFF;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
-    /* Encabezado principal con acento en Rosa Educk Art */
+    /* Encabezados */
     h1 {
         color: #E6007E !important;
         text-align: center;
         font-weight: 700;
     }
     
-    /* Subtítulos en Azul */
     h2, h3, .stSubheader {
         color: #0099DA !important;
     }
     
-    /* Barra lateral en Verde Educk Art */
+    /* Barra lateral */
     [data-testid="stSidebar"] {
         background-color: #009A44 !important;
     }
     
-    /* Texto en la barra lateral en blanco para contraste */
     [data-testid="stSidebar"] * {
         color: #FFFFFF !important;
     }
     
-    /* Botones con estilo Rosa y bordes redondeados */
+    /* Corrección de cajas de entrada (Forzar texto claro y visible) */
+    div[data-baseweb="input"] {
+        background-color: #F0F2F6 !important;
+        border-radius: 8px !important;
+    }
+    input {
+        color: #000000 !important;
+    }
+    
+    /* Botones */
     .stButton>button {
         background-color: #E6007E !important;
         color: white !important;
@@ -58,17 +65,11 @@ st.markdown("""
         background-color: #0099DA !important;
         transform: scale(1.02);
     }
-    
-    /* Cajas de alerta e información */
-    .stAlert {
-        border-radius: 10px !important;
-    }
     </style>
 """, unsafe_allow_html=True)
 
-# Logo en la parte superior e incrustado en el menú lateral
-LOGO_URL = "https://lookaside.fbsbx.com/lookaside/crawler/media/?media_id=100064108599133"
-st.sidebar.image(LOGO_URL, use_container_width=True)
+# Logo oficial (utilizando logo.png de tu repositorio o fallback)
+LOGO_URL = "logo.png"
 
 # ---------------------------------------------------------
 # 2. BASE DE DATOS SQLITE
@@ -134,16 +135,23 @@ banco_por_grado = {
     }
 }
 
-# Reproductor de música en barra lateral
-st.sidebar.markdown("🎵 **Música Ambient:**")
+# ---------------------------------------------------------
+# MÚSICA DE YOUTUBE Y MARCA DE AGUA
+# ---------------------------------------------------------
+st.sidebar.markdown("🎵 **Música de Fondo (YouTube):**")
 opcion_musica = st.sidebar.radio(
-    "Pista:",
-    ["Zelda - Ocarina of Time Ambient", "Resident Evil - Save Room Lofi"],
+    "Selecciona Pista:",
+    ["Zelda - Ocarina of Time", "Resident Evil - Save Room Lofi"],
     label_visibility="collapsed"
 )
 
-audio_url = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" if opcion_musica == "Zelda - Ocarina of Time Ambient" else "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
-st.sidebar.audio(audio_url, loop=True)
+# Enlaces exactos enviados
+if opcion_musica == "Zelda - Ocarina of Time":
+    url_yt = "https://youtu.be/gVJzgXehZW8"
+else:
+    url_yt = "https://youtu.be/S9cCNem6Tjk"
+
+st.sidebar.video(url_yt)
 st.sidebar.write("---")
 st.sidebar.caption("⚡ *Hecho por Ilich Bauman Guerrero*")
 
@@ -154,11 +162,6 @@ if "usuario" not in st.session_state:
 # 4. INICIO DE SESIÓN Y REGISTRO DE ALUMNOS
 # ---------------------------------------------------------
 if st.session_state.usuario is None:
-    # Encabezado con imagen centrada
-    col_img1, col_img2, col_img3 = st.columns([1, 2, 1])
-    with col_img2:
-        st.image(LOGO_URL, use_container_width=True)
-        
     st.title("Colegio Educk Art")
     st.subheader("Plataforma de Desafíos Matemáticos")
     
