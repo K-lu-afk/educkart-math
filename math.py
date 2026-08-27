@@ -4,78 +4,78 @@ import pandas as pd
 from datetime import date
 
 # ---------------------------------------------------------
-# 1. CONFIGURACIÓN INICIAL
+# 1. CONFIGURACIÓN DE PÁGINA
 # ---------------------------------------------------------
 st.set_page_config(
-    page_title="Plataforma de Acertijos - Colegio Educk Art",
+    page_title="Colegio Educk Art - Plataforma de Desafíos Matemáticos",
     page_icon="📐",
     layout="centered"
 )
 
 # ---------------------------------------------------------
-# 2. SELECTOR DE MODO CLARO / OSCURO EN LA BARRA LATERAL
+# 2. SELECTOR DE TEMA (CLARO / OSCURO)
 # ---------------------------------------------------------
-st.sidebar.markdown("🎨 **Apariencia de la Página:**")
+st.sidebar.markdown("🎨 **Apariencia:**")
 modo_tema = st.sidebar.radio(
     "Selecciona Tema:",
     ["☀️ Modo Luz", "🌙 Modo Oscuro"],
     label_visibility="collapsed"
 )
 
-# Definición de variables de color dinámicas según el tema
+# Configuración visual con la paleta de Educk Art
 if modo_tema == "🌙 Modo Oscuro":
-    bg_app = "#1E1E1E"          # Gris oscuro elegante para el fondo general
-    bg_input = "#2D2D2D"        # Gris medio para cajas de entrada
-    text_color = "#FFFFFF"      # Texto blanco general
-    text_pestanas = "#FFFFFF"   # Pestañas en blanco
-    text_autor = "#FFFFFF"      # Firma de Ilich en blanco
+    bg_app = "#1A1A1A"          # Gris oscuro confortable
+    bg_input = "#2A2A2A"        # Fondo para cajas de texto
+    text_color = "#FFFFFF"      # Texto general en blanco
+    text_pestanas = "#0099DA"   # Pestañas en Azul Educk Art
+    text_autor = "#FFFFFF"      # Marca de agua en blanco
     border_color = "#444444"
 else:
-    bg_app = "#FFFFFF"          # Blanco limpio
-    bg_input = "#F0F2F6"        # Gris muy claro para entradas
-    text_color = "#000000"      # Texto negro general
+    bg_app = "#FFFFFF"          # Blanco
+    bg_input = "#F4F6F9"        # Gris claro
+    text_color = "#222222"      # Texto oscuro para lectura fácil
     text_pestanas = "#009A44"   # Pestañas en Verde Educk Art
-    text_autor = "#000000"      # Firma de Ilich en negro
-    border_color = "#DDDDDD"
+    text_autor = "#000000"      # Marca de agua en negro
+    border_color = "#CCCCCC"
 
-# Inyección de estilos CSS según el modo seleccionado
+# Inyección de estilos CSS institucionales
 st.markdown(f"""
     <style>
-    /* Fondo principal app */
+    /* Fondo e interfaz general */
     .stApp {{
         background-color: {bg_app} !important;
         color: {text_color} !important;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }}
     
-    /* Título principal en Rosa Educk Art */
+    /* Título principal: Rosa Educk Art */
     h1 {{
         color: #E6007E !important;
         text-align: center;
         font-weight: 700;
     }}
     
-    /* Subtítulos en Azul Educk Art */
+    /* Subtítulos: Azul Educk Art */
     h2, h3, .stSubheader {{
         color: #0099DA !important;
     }}
     
-    /* Textos generales, etiquetas y marcas de agua */
+    /* Textos generales y etiquetas */
     p, span, label, div {{
         color: {text_color} !important;
     }}
 
-    /* Pestañas (Ingresar Alumno, Registrarse, Panel Maestros) */
+    /* Pestañas de navegación superiores */
     button[data-baseweb="tab"] div p {{
         color: {text_pestanas} !important;
         font-weight: bold !important;
-        font-size: 1.05rem !important;
+        font-size: 1.1rem !important;
     }}
     
-    /* Cajas de texto de entrada */
+    /* Cajas de entrada de texto */
     div[data-baseweb="input"] {{
         background-color: {bg_input} !important;
-        border: 1px solid {border_color} !important;
+        border: 2px solid {border_color} !important;
         border-radius: 8px !important;
     }}
     
@@ -84,7 +84,7 @@ st.markdown(f"""
         background-color: transparent !important;
     }}
     
-    /* Barra lateral en Verde Educk Art constante */
+    /* Barra lateral: Verde Educk Art */
     [data-testid="stSidebar"] {{
         background-color: #009A44 !important;
     }}
@@ -93,14 +93,14 @@ st.markdown(f"""
         color: #FFFFFF !important;
     }}
     
-    /* Botones de acción en Rosa con letras blancas */
+    /* Botones: Rosa Educk Art con efecto interactivo a Azul */
     .stButton>button {{
         background-color: #E6007E !important;
         color: #FFFFFF !important;
-        border-radius: 12px !important;
+        border-radius: 10px !important;
         border: none !important;
         font-weight: bold !important;
-        padding: 0.5rem 1rem !important;
+        padding: 0.5rem 1.2rem !important;
         transition: all 0.3s ease !important;
     }}
     
@@ -109,19 +109,17 @@ st.markdown(f"""
         transform: scale(1.02);
     }}
     
-    /* Firma del Autor (Estilo personalizado) */
-    .firma-autor {{
+    /* Estilo exclusivo para la Marca de Agua */
+    .marca-agua {{
         color: {text_autor} !important;
         text-align: center;
         font-weight: bold;
-        font-size: 0.9rem;
-        margin-top: 15px;
+        font-size: 0.95rem;
+        margin-top: 25px;
+        padding: 10px;
     }}
     </style>
 """, unsafe_allow_html=True)
-
-# Logo oficial
-LOGO_URL = "logo.png"
 
 # ---------------------------------------------------------
 # 3. BASE DE DATOS SQLITE
@@ -188,12 +186,12 @@ banco_por_grado = {
 }
 
 # ---------------------------------------------------------
-# MÚSICA DE YOUTUBE Y REPRODUCTOR
+# MÚSICA DE FONDO (YOUTUBE)
 # ---------------------------------------------------------
 st.sidebar.write("---")
 st.sidebar.markdown("🎵 **Música Ambient (YouTube):**")
 opcion_musica = st.sidebar.radio(
-    "Selecciona Pista:",
+    "Pistas recomendadas:",
     ["Zelda - Ocarina of Time", "Resident Evil - Save Room Lofi"],
     label_visibility="collapsed"
 )
@@ -322,7 +320,7 @@ if st.session_state.usuario is None:
             st.error("Contraseña incorrecta.")
             
     st.write("---")
-    st.markdown('<p class="firma-autor">✨ Hecho por Ilich Bauman Guerrero</p>', unsafe_allow_html=True)
+    st.markdown('<p class="marca-agua">✨ Hecho por Ilich Bauman Guerrero</p>', unsafe_allow_html=True)
     st.stop()
 
 # ---------------------------------------------------------
@@ -434,4 +432,4 @@ if st.checkbox("💡 Ver Pista"):
     st.info(datos_nivel["pista"])
 
 st.write("---")
-st.markdown('<p class="firma-autor">✨ Hecho por Ilich Bauman Guerrero</p>', unsafe_allow_html=True)
+st.markdown('<p class="marca-agua">✨ Hecho por Ilich Bauman Guerrero</p>', unsafe_allow_html=True)
