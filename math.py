@@ -1,6 +1,7 @@
 import streamlit as st
 import sqlite3
 import pandas as pd
+import random
 from datetime import date
 
 # ---------------------------------------------------------
@@ -134,51 +135,103 @@ def conectar_db():
 conn = conectar_db()
 
 # ---------------------------------------------------------
-# 4. BANCO DE ACERTIJOS SEGÚN EL PROGRAMA SINTÉTICO NEM (FASE 6)
+# 4. GENERADOR DINÁMICO DE EJERCICIOS NEM POR GRADO/TRIMESTRE
 # ---------------------------------------------------------
-banco_por_grado = {
-    "1º": {
-        "Trimestre 1": {
-            1: {"pregunta": "NEM (Extensión del significado de las operaciones): Resuelve (-8) + (-5)", "correcta": "-13", "pista": "Al sumar dos números negativos, se suman sus valores absolutos y el resultado es negativo."},
-            2: {"pregunta": "NEM (Jerarquía de operaciones): Resuelve 15 + 3 * (8 - 2) / 2", "correcta": "24", "pista": "Resuelve primero el paréntesis (8-2)=6, luego multiplica, divide y al final suma."},
-            3: {"pregunta": "NEM (MCM y MCD): Calcula el Mínimo Común Múltiplo (MCM) de 6 y 9.", "correcta": "18", "pista": "Encuentra el número más pequeño que sea múltiplo común de 6 y 9."}
-        },
-        "Trimestre 2": {
-            1: {"pregunta": "NEM (Ecuaciones lineales): Resuelve para x: 2x + 7 = 19", "correcta": "6", "pista": "Resta 7 a 19 (12) y divide entre 2."},
-            2: {"pregunta": "NEM (Representación de números rel.): Convierte la fracción 3/4 a número decimal.", "correcta": "0.75", "pista": "Divide el numerador (3) entre el denominador (4)."}
-        },
-        "Trimestre 3": {
-            1: {"pregunta": "NEM (Rectas y ángulos): ¿Cuál es el suplemento de un ángulo de 110º?", "correcta": "70", "pista": "Los ángulos suplementarios suman 180º."},
-            2: {"pregunta": "NEM (Perímetro y área): Calcula el área de un triángulo con base = 12 cm y altura = 5 cm.", "correcta": "30", "pista": "Fórmula: (Base * Altura) / 2."}
-        }
-    },
-    "2º": {
-        "Trimestre 1": {
-            1: {"pregunta": "NEM (Leyes de los exponentes): Simplifica x⁵ * x⁴. ¿Cuál es el valor del exponente final?", "correcta": "9", "pista": "En la multiplicación de potencias de la misma base, los exponentes se suman."},
-            2: {"pregunta": "NEM (Notación científica): Escribe 4.5 * 10³ en forma decimal estándar.", "correcta": "4500", "pista": "Mueve el punto decimal 3 lugares a la derecha."}
-        },
-        "Trimestre 2": {
-            1: {"pregunta": "NEM (Sistemas de ecuaciones 2x2): Si x + y = 10 y x - y = 4, ¿cuál es el valor de x?", "correcta": "7", "pista": "Suma ambas ecuaciones: 2x = 14, despeja x."},
-            2: {"pregunta": "NEM (Teorema de Pitágoras): En un triángulo rectángulo con catetos a = 9 y b = 12, calcula la hipotenusa c.", "correcta": "15", "pista": "c² = 9² + 12² = 81 + 144 = 225. Sacale raíz a 225."}
-        },
-        "Trimestre 3": {
-            1: {"pregunta": "NEM (Relaciones inversas): Si 4 trabajadores tardan 6 horas en pintar una barda, ¿cuántas horas tardarán 8 trabajadores?", "correcta": "3", "pista": "A mayor cantidad de trabajadores, menor tiempo (proporcionalidad inversa)."}
-        }
-    },
-    "3º": {
-        "Trimestre 1": {
-            1: {"pregunta": "NEM (Ecuaciones cuadráticas): Resuelve x² - 49 = 0. Escribe la raíz positiva.", "correcta": "7", "pista": "Despeja x² = 49 y obtén la raíz cuadrada."},
-            2: {"pregunta": "NEM (Ecuaciones de segundo grado): Resuelve x² - 7x + 10 = 0. ¿Cuál es la raíz mayor?", "correcta": "5", "pista": "Busca dos números que multiplicados den 10 y sumados den 7 (2 y 5)."}
-        },
-        "Trimestre 2": {
-            1: {"pregunta": "NEM (Razones trigonométricas): En un triángulo rectángulo, si Cateto Opuesto = 3 e Hipotenusa = 5, calcula Sen(θ) en decimal.", "correcta": "0.6", "pista": "Seno = Opuesto / Hipotenusa (3 / 5)."},
-            2: {"pregunta": "NEM (Trigonometría): Si Tan(θ) = Cateto Opuesto / Cateto Adyacente, calcula Tan(θ) si CO = 8 y CA = 4.", "correcta": "2", "pista": "Divide 8 entre 4."}
-        },
-        "Trimestre 3": {
-            1: {"pregunta": "NEM (Volumen de cuerpos geométricos): Calcula el volumen en cm³ de un cilindro con r = 2 cm, h = 5 cm y usando π = 3.14", "correcta": "62.8", "pista": "Fórmula: π * r² * h = 3.14 * (2²) * 5."}
-        }
-    }
-}
+def generar_ejercicio_nem(grado, trimestre, nivel, matricula):
+    # Semilla para variedad
+    semilla = f"{matricula}_{nivel}"
+    random.seed(semilla)
+    
+    if grado == "1º":
+        if trimestre == "Trimestre 1":
+            a = random.randint(-15, -2)
+            b = random.randint(-12, -1)
+            ans = a + b
+            return {
+                "pregunta": f"NEM (Números Enteros): Resuelve la operación con signo: ({a}) + ({b})",
+                "correcta": str(ans),
+                "pista": "Al sumar dos números negativos, sus magnitudes se suman y el resultado mantiene el signo negativo."
+            }
+        elif trimestre == "Trimestre 2":
+            x = random.randint(2, 12)
+            a = random.randint(2, 6)
+            b = random.randint(3, 15)
+            c = a * x + b
+            return {
+                "pregunta": f"NEM (Ecuaciones de Primer Grado): Resuelve para x: {a}x + {b} = {c}",
+                "correcta": str(x),
+                "pista": f"Resta {b} a {c} y luego divide el resultado entre {a}."
+            }
+        else:
+            base = random.randint(6, 20)
+            altura = random.randint(4, 14)
+            area = (base * altura) // 2
+            return {
+                "pregunta": f"NEM (Perímetros y Áreas): Calcula el área en cm² de un triángulo con base = {base} cm y altura = {altura*2} cm.",
+                "correcta": str(base * altura),
+                "pista": "Aplica la fórmula general del área del triángulo: (Base * Altura) / 2."
+            }
+
+    elif grado == "2º":
+        if trimestre == "Trimestre 1":
+            exp1 = random.randint(3, 8)
+            exp2 = random.randint(2, 7)
+            ans = exp1 + exp2
+            return {
+                "pregunta": f"NEM (Leyes de los Exponentes): Si simplificas x^{{{exp1}}} * x^{{{exp2}}} = xⁿ, ¿cuál es el valor exacto del exponente n?",
+                "correcta": str(ans),
+                "pista": "Recuerda la regla fundamental: al multiplicar potencias con la misma base, los exponentes se suman."
+            }
+        elif trimestre == "Trimestre 2":
+            k = random.randint(2, 5)
+            a = 3 * k
+            b = 4 * k
+            c = 5 * k
+            return {
+                "pregunta": f"NEM (Teorema de Pitágoras): Un triángulo rectángulo tiene catetos a = {a} cm y b = {b} cm. ¿Cuánto mide la hipotenusa c?",
+                "correcta": str(c),
+                "pista": f"Aplica la fórmula c = √(a² + b²). Calcula {a}² + {b}² y obtén la raíz cuadrada."
+            }
+        else:
+            trabajadores_1 = random.choice([2, 3, 4])
+            horas_1 = random.choice([12, 24, 36])
+            trabajadores_2 = trabajadores_1 * 2
+            horas_2 = horas_1 // 2
+            return {
+                "pregunta": f"NEM (Variación Inversa): Si {trabajadores_1} obreros tardan {horas_1} horas en terminar una obra, ¿cuántas horas tardarán {trabajadores_2} obreros?",
+                "correcta": str(horas_2),
+                "pista": "En la proporcionalidad inversa, si la cantidad de personas se duplica, el tiempo requerido se reduce a la mitad."
+            }
+
+    else: # 3º de Secundaria
+        if trimestre == "Trimestre 1":
+            raiz = random.randint(4, 12)
+            cuadrado = raiz ** 2
+            return {
+                "pregunta": f"NEM (Ecuaciones Cuadráticas): Resuelve x² - {cuadrado} = 0. Escribe la raíz positiva de x.",
+                "correcta": str(raiz),
+                "pista": f"Despeja x² = {cuadrado} y obtén la raíz cuadrada exacta."
+            }
+        elif trimestre == "Trimestre 2":
+            mult = random.randint(1, 4)
+            co = 3 * mult
+            ca = 4 * mult
+            hip = 5 * mult
+            seno = round(co / hip, 2)
+            return {
+                "pregunta": f"NEM (Razones Trigonométricas): En un triángulo rectángulo con Cateto Opuesto = {co} e Hipotenusa = {hip}, calcula Sen(θ) en valor decimal exacto.",
+                "correcta": str(seno),
+                "pista": "Fórmula trigonométrica: Sen(θ) = Cateto Opuesto / Hipotenusa."
+            }
+        else:
+            r = random.randint(2, 5)
+            h = random.randint(4, 10)
+            volumen = round(3.14 * (r**2) * h, 1)
+            return {
+                "pregunta": f"NEM (Volumen de Cuerpos): Calcula el volumen en cm³ de un cilindro con radio r = {r} cm, altura h = {h} cm (Usa π = 3.14).",
+                "correcta": str(volumen),
+                "pista": f"Fórmula del volumen: V = π * r² * h. Es decir: 3.14 * ({r}²) * {h}."
+            }
 
 # ---------------------------------------------------------
 # MÚSICA DE FONDO (YOUTUBE)
@@ -358,11 +411,14 @@ if nivel_actual > 30:
     st.success(f"🏆 ¡Has completado los 30 niveles del {trimestre_sel}!")
     st.stop()
 
-hoy = str(date.today())
-if u['ultimo_dia'] == hoy:
-    st.warning("⏳ **¡Ya completaste tu nivel de hoy!**")
-    st.info("Vuelve mañana para desbloquear el siguiente nivel.")
-    st.stop()
+# ---------------------------------------------------------
+# RESTRICCIÓN DIARIA DESACTIVADA PARA PRUEBAS (TESTING)
+# ---------------------------------------------------------
+# hoy = str(date.today())
+# if u['ultimo_dia'] == hoy:
+#     st.warning("⏳ **¡Ya completaste tu nivel de hoy!**")
+#     st.info("Vuelve mañana para desbloquear el siguiente nivel.")
+#     st.stop()
 
 if u['intentos'] >= 3:
     st.error("🚫 **Has agotado tus 3 intentos de hoy para este nivel.**")
@@ -376,12 +432,7 @@ st.subheader(f"🟢 {grado_alumno} Secundaria | {trimestre_sel} | Nivel {nivel_a
 
 st.warning("📝 **¡Atención!** Saca tu cuaderno de matemáticas y realiza el procedimiento paso a paso antes de responder.")
 
-preguntas_grado = banco_por_grado.get(grado_alumno, {}).get(trimestre_sel, {})
-datos_nivel = preguntas_grado.get(nivel_actual, {
-    "pregunta": f"Escribe el resultado numérico exacto para el desafío NEM de {grado_alumno} Secundaria del nivel {nivel_actual}.",
-    "correcta": "10",
-    "pista": "Resuelve la operación en tu cuaderno paso a paso antes de escribir la respuesta."
-})
+datos_nivel = generar_ejercicio_nem(grado_alumno, trimestre_sel, nivel_actual, u['matricula'])
 
 st.write(f"**Desafío:** {datos_nivel['pregunta']}")
 st.caption(f"⚠️ Intentos fallidos hoy: {u['intentos']} / 3")
@@ -398,14 +449,13 @@ with st.form(key=f"form_abierto_{trimestre_sel}_{nivel_actual}"):
             nuevo_nivel = nivel_actual + 1
             
             c = conn.cursor()
-            c.execute(f"UPDATE alumnos SET {col_db} = ?, ultimo_dia_jugado = ?, intentos_fallidos = 0 WHERE matricula = ?", 
-                      (nuevo_nivel, hoy, u['matricula']))
+            c.execute(f"UPDATE alumnos SET {col_db} = ?, intentos_fallidos = 0 WHERE matricula = ?", 
+                      (nuevo_nivel, u['matricula']))
             conn.commit()
             
             if col_db == "trimestre1_nivel": u['t1'] = nuevo_nivel
             elif col_db == "trimestre2_nivel": u['t2'] = nuevo_nivel
             elif col_db == "trimestre3_nivel": u['t3'] = nuevo_nivel
-            u['ultimo_dia'] = hoy
             u['intentos'] = 0
             
             st.rerun()
