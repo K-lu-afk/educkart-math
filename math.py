@@ -27,6 +27,7 @@ if modo_tema == "🌙 Modo Oscuro":
     bg_app = "#1E1E1E"          
     bg_input = "#2D2D2D"        
     text_color = "#FFFFFF"      
+    text_input = "#FFFFFF"
     text_pestanas = "#0099DA"   
     text_autor = "#FFFFFF"      
     border_color = "#555555"
@@ -34,12 +35,14 @@ else:
     bg_app = "#FFFFFF"          
     bg_input = "#F0F2F6"        
     text_color = "#111111"      
+    text_input = "#000000"
     text_pestanas = "#009A44"   
     text_autor = "#000000"      
     border_color = "#CCCCCC"
 
 st.markdown(f"""
     <style>
+    /* Fondo e interfaz general */
     .stApp {{
         background-color: {bg_app} !important;
         color: {text_color} !important;
@@ -60,12 +63,14 @@ st.markdown(f"""
         color: {text_color} !important;
     }}
 
+    /* Pestañas superiores */
     button[data-baseweb="tab"] div p {{
         color: {text_pestanas} !important;
         font-weight: bold !important;
         font-size: 1.1rem !important;
     }}
     
+    /* Cajas de entrada de texto fijas y legibles */
     div[data-baseweb="input"] {{
         background-color: {bg_input} !important;
         border: 2px solid {border_color} !important;
@@ -73,10 +78,13 @@ st.markdown(f"""
     }}
     
     input {{
-        color: {text_color} !important;
+        color: {text_input} !important;
+        -webkit-text-fill-color: {text_input} !important;
         background-color: transparent !important;
+        font-weight: 500 !important;
     }}
     
+    /* Sidebar */
     [data-testid="stSidebar"] {{
         background-color: #009A44 !important;
     }}
@@ -85,6 +93,7 @@ st.markdown(f"""
         color: #FFFFFF !important;
     }}
     
+    /* Botones */
     .stButton>button {{
         background-color: #E6007E !important;
         color: #FFFFFF !important;
@@ -100,6 +109,7 @@ st.markdown(f"""
         transform: scale(1.02);
     }}
     
+    /* Marca de Agua */
     .marca-agua {{
         color: {text_autor} !important;
         text-align: center;
@@ -138,8 +148,7 @@ conn = conectar_db()
 # 4. GENERADOR DINÁMICO DE EJERCICIOS NEM POR GRADO/TRIMESTRE
 # ---------------------------------------------------------
 def generar_ejercicio_nem(grado, trimestre, nivel, matricula):
-    # Semilla para variedad
-    semilla = f"{matricula}_{nivel}"
+    semilla = f"{matricula}_{date.today()}_{nivel}"
     random.seed(semilla)
     
     if grado == "1º":
@@ -412,13 +421,13 @@ if nivel_actual > 30:
     st.stop()
 
 # ---------------------------------------------------------
-# RESTRICCIÓN DIARIA DESACTIVADA PARA PRUEBAS (TESTING)
+# RESTRICCIÓN DIARIA REACTIVADA (1 NIVEL POR DÍA)
 # ---------------------------------------------------------
-# hoy = str(date.today())
-# if u['ultimo_dia'] == hoy:
-#     st.warning("⏳ **¡Ya completaste tu nivel de hoy!**")
-#     st.info("Vuelve mañana para desbloquear el siguiente nivel.")
-#     st.stop()
+hoy = str(date.today())
+if u['ultimo_dia'] == hoy:
+    st.warning("⏳ **¡Ya completaste tu nivel de hoy!**")
+    st.info("Vuelve mañana para desbloquear el siguiente nivel.")
+    st.stop()
 
 if u['intentos'] >= 3:
     st.error("🚫 **Has agotado tus 3 intentos de hoy para este nivel.**")
@@ -449,13 +458,14 @@ with st.form(key=f"form_abierto_{trimestre_sel}_{nivel_actual}"):
             nuevo_nivel = nivel_actual + 1
             
             c = conn.cursor()
-            c.execute(f"UPDATE alumnos SET {col_db} = ?, intentos_fallidos = 0 WHERE matricula = ?", 
-                      (nuevo_nivel, u['matricula']))
+            c.execute(f"UPDATE alumnos SET {col_db} = ?, ultimo_dia_jugado = ?, intentos_fallidos = 0 WHERE matricula = ?", 
+                      (nuevo_nivel, hoy, u['matricula']))
             conn.commit()
             
             if col_db == "trimestre1_nivel": u['t1'] = nuevo_nivel
             elif col_db == "trimestre2_nivel": u['t2'] = nuevo_nivel
             elif col_db == "trimestre3_nivel": u['t3'] = nuevo_nivel
+            u['ultimo_dia'] = hoy
             u['intentos'] = 0
             
             st.rerun()
