@@ -39,7 +39,7 @@ else:
     bg_app = BLANCO
     bg_input = "#222222"
     text_color = "#111111"
-    border_color = "#CCCCCC"
+    border_color = "#0a0a0a"
 
 st.markdown(f"""
     <style>
