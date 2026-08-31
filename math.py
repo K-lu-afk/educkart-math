@@ -3,27 +3,24 @@ import sqlite3
 import pandas as pd
 import random
 import hashlib
-import os
 from datetime import date
 
 # ---------------------------------------------------------
 # 1. CONFIGURACIÓN DE PÁGINA
 # ---------------------------------------------------------
-LOGO_PATH = "assets/logo_educkart.png"
-
 st.set_page_config(
     page_title="Colegio Educk-Art - Plataforma de Desafíos Matemáticos",
-    page_icon=LOGO_PATH if os.path.exists(LOGO_PATH) else "📐",
+    page_icon="📐",
     layout="centered"
 )
 
 # ---------------------------------------------------------
-# 2. PALETA DE MARCA (extraída del logo + colores institucionales)
+# 2. PALETA DE MARCA
 # ---------------------------------------------------------
-ROJO = "#D20C0B"      # rojo principal del logo
-ROSA = "#E6007E"      # acento
-AZUL = "#0099DA"      # acento
-VERDE = "#009A44"     # acento / sidebar
+ROJO = "#D20C0B"
+ROSA = "#E6007E"
+AZUL = "#0099DA"
+VERDE = "#009A44"
 BLANCO = "#FFFFFF"
 
 st.sidebar.markdown("🎨 **Apariencia:**")
@@ -253,11 +250,8 @@ def respuesta_es_correcta(resp_usuario: str, correcta_str: str) -> bool:
 
 
 # ---------------------------------------------------------
-# LOGO + MÚSICA DE FONDO EN SIDEBAR
+# MÚSICA DE FONDO (YOUTUBE)
 # ---------------------------------------------------------
-if os.path.exists(LOGO_PATH):
-    st.sidebar.image(LOGO_PATH, use_container_width=True)
-
 st.sidebar.write("---")
 st.sidebar.markdown("🎵 **Música Ambient (YouTube):**")
 opcion_musica = st.sidebar.radio(
@@ -279,11 +273,6 @@ if "usuario" not in st.session_state:
 # 5. INICIO DE SESIÓN Y REGISTRO DE ALUMNOS
 # ---------------------------------------------------------
 if st.session_state.usuario is None:
-    if os.path.exists(LOGO_PATH):
-        col_izq, col_centro, col_der = st.columns([1, 2, 1])
-        with col_centro:
-            st.image(LOGO_PATH, use_container_width=True)
-
     st.title("Colegio Educk-Art")
     st.subheader("Plataforma de Desafíos Matemáticos (NEM)")
 
