@@ -70,9 +70,9 @@ st.markdown(f"""
         border-radius: 8px !important;
     }}
     input, textarea, select, [data-baseweb="select"] * {{
-        color: #FFFFFF !important;
-        -webkit-text-fill-color: #FFFFFF !important;
-        background-color: transparent !important;
+        color: {text_color} !important;
+        -webkit-text-fill-color: {text_color} !important;
+        background-color: {bg_input} !important;
         font-weight: bold !important;
     }}
     [data-testid="stSidebar"] {{
