@@ -33,7 +33,7 @@ modo_tema = st.sidebar.radio(
 if modo_tema == "🌙 Modo Oscuro":
     bg_app = "#1E1E1E"
     bg_input = "#2D2D2D"
-    text_color = "##000000"
+    text_color = "#111111"
     border_color = "#555555"
 else:
     bg_app = BLANCO
